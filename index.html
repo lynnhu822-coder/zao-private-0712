@@ -316,6 +316,20 @@
     .season-card[data-pos="2"] { transform:translateX(32%) scale(0.87); }
   }
 
+  /* 手機版：卡片右側「下一張」提示，僅最前面那張卡片顯示 */
+  .season-card-hint { display:none; }
+  @media(max-width:768px){
+    .season-card[data-pos="0"] .season-card-hint {
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      color:var(--brand); opacity:.55;
+      animation:seasonHintPulse 1.8s ease-in-out infinite;
+    }
+    .season-card-hint svg { display:block; }
+    .season-card-hint span { font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:2px; writing-mode:vertical-rl; }
+  }
+  @keyframes seasonHintPulse { 0%,100%{ transform:translateY(-50%) translateX(0); opacity:.4; } 50%{ transform:translateY(-50%) translateX(4px); opacity:.85; } }
+
   /* ── INTERACTIVE PRICE CALCULATOR ── */
   .calc-section { background:#1e2830; border-top:1px solid rgba(245,243,239,.06); }
   .calc-inner { padding:100px 60px; max-width:1200px; margin:0 auto; }
@@ -797,6 +811,10 @@
         <span class="season-chip standard">1/4 – 1/17</span>
         <span class="season-chip standard">2/28 – 3/5</span>
       </div>
+      <div class="season-card-hint">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>下一張</span>
+      </div>
     </div>
     <!-- 旺季 index=1 -->
     <div class="season-card" data-index="1" data-pos="1" onclick="seasonCardClick(1)">
@@ -808,6 +826,10 @@
         <span class="season-chip peak">2/4 – 2/10</span>
         <span class="season-chip peak">2/11 – 2/27</span>
       </div>
+      <div class="season-card-hint">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>下一張</span>
+      </div>
     </div>
     <!-- 淡季 index=2 -->
     <div class="season-card" data-index="2" data-pos="2" onclick="seasonCardClick(2)">
@@ -816,6 +838,10 @@
       <div class="season-chips">
         <span class="season-chip off">12/21 – 12/24</span>
         <span class="season-chip off">3/6 – 3/26</span>
+      </div>
+      <div class="season-card-hint">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>下一張</span>
       </div>
     </div>
   </div>
@@ -843,7 +869,6 @@
         <div class="calc-group">
           <p class="calc-group-label">購買波段</p>
           <div class="calc-options" id="ctrlTier">
-            <button class="calc-btn expired" data-tier="15000" disabled>頭香優惠</button>
             <button class="calc-btn active" data-tier="15400">超早鳥</button>
             <button class="calc-btn" data-tier="16400">早鳥</button>
             <button class="calc-btn" data-tier="17400">季前價</button>
@@ -918,7 +943,7 @@
         <p class="calc-result-label">費用試算結果</p>
         <div class="calc-result-main">
           <div class="calc-result-price"><span class="unit">NT$</span><span id="totalDisplay">17,500</span></div>
-          <p class="calc-result-sub" id="resultSub">1 天 · 1–3 人 · 標準季 · 頭香優惠</p>
+          <p class="calc-result-sub" id="resultSub">1 天 · 1–3 人 · 標準季 · 超早鳥</p>
           <span class="calc-season-badge standard" id="seasonBadge">標準季</span>
         </div>
         <div class="calc-result-breakdown" id="breakdown">
@@ -1229,7 +1254,7 @@ function calcPrice() {
   document.getElementById('totalDisplay').textContent = fmt(grand);
 
   // Sub label
-  const tierNames = {15000:'頭香優惠',15400:'超早鳥',16400:'早鳥',17400:'季前價',18400:'季中價'};
+  const tierNames = {15400:'超早鳥',16400:'早鳥',17400:'季前價',18400:'季中價'};
   const seasonNames = {standard:'標準季', off:'淡季', peak:'旺季'};
   const memberLabel = state.member > 0 ? '非會員' : '會員';
   document.getElementById('resultSub').textContent =
